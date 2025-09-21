@@ -1,0 +1,11 @@
+services:
+  node-app:
+    build:  # build from the dockerfile in the production stage
+      context: .
+      target: production
+    environment:
+      - NODE_ENV=production  
+    command: 
+      - npm run start  
+      
+
