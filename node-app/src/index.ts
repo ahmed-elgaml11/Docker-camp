@@ -27,8 +27,10 @@ app.get('/', (req, res) => {
     res.send('hi.....')
 })
 app.get('/data', async (req, res) => {
-    const data = await redisClient.get('products')
-    res.send(data)
+    // const data = await redisClient.get('products')
+    res.json({
+        msg: 'fsf',
+    })
 })
 
 
