@@ -6,7 +6,7 @@ services:
     env_file:
       - ./.env
     depends_on: 
-      - postgrs  
+      - postgres  
       - redis       
   # mongo:
   #   image: mongo
@@ -17,7 +17,7 @@ services:
   #     MONGO_INITDB_ROOT_USERNAME: root
   #     MONGO_INITDB_ROOT_PASSWORD: example
 
-  postgrs:
+  postgres:
     image: postgres
     restart: always
     shm_size: 128mb

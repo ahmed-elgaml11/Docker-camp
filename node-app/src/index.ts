@@ -15,7 +15,7 @@ const client = new Client({
 client
 .connect()
 .then(() => console.log('connected to postgres'))
-.catch(err => console.log(err)) 
+.catch((err) => console.log(err)) 
 
 // const redisClient = createClient({
 //     url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
@@ -33,10 +33,10 @@ const app = express()
 //     log (err)
 // })
 
-// app.get('/', (req, res) => {
-//     redisClient.set('products', 'products.....')
-//     res.send('hi.....')
-// })
+app.get('/', (req, res) => {
+    // redisClient.set('products', 'products.....')
+    res.send('hi.....')
+})
 app.get('/data', async (req, res) => {
     // const data = await redisClient.get('products')
     res.json({
@@ -55,6 +55,6 @@ app.get('/hi', (req, res) => {
 
 
 const port = process.env.PORT || 4000
-app.listen(port, () => {
-    console.log(`lestining on ${port}`);
+app.listen(Number(port), "0.0.0.0", () => {
+    console.log(`Listening on ${port}`);
 })
