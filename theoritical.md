@@ -83,7 +83,80 @@ It lives outside the container’s filesystem, so data survives when the contain
 ### after running the database inside acontainer if you wite `npm run dev`  it will not work because the database is installed inside the container not your local machine
 
 
+### in the production mode, any change requires build new image becuse the hot reload in the dev only
+___
+
+### for deolyment:                                         
+1- create server                                                             
+2- connect to the server                                          
+3- install docker on the server                                       
+4- from the server, clone the repo                                      
+5 build the image and run the container                                         
+
+`but it is not a good choice to build the image in the server so you should `                                                      
+
+1- push the code to the repo                                                                      
+2- connect to docker (docker login)                                                                           
+3- build the image in your machine  docker-compose -f docker-compose.yml -f docker-compose.prod.yml build                             
+4- then push the image into your repositry on dockerHub  docker-compose -f docker-compose.yml -f docker-compose.prod.yml push (serviceName)                                            
+5- from the server, pull the repo from github (git bull) and pull the image from dockerHub (docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull)                                                              
+6- stop the old containers(if exists)run the container                                            
+
+____ 
+
+### If i want load balancer 
+
+i should make and run multiples inctances (containers) from node-app service and use `Nginx` as a load balancer to distribute the requests: 
+
+
+1- in the up command: docker-compose -f docker-compose.yml -f docker-compose.prod.yml -d up --scale node-app=3   but you should not give the service container_name field because it will lead to duplication errors
+
+2- in case of load balancing we dont need to expose the ports of my app 4000:4000
+beacuse the request comes firsr to nginx on 80:80 and it forwards the request to the app container on port 4000 automatically so, now port 4000 already in use so it cant make another instance on the same port because it will lead to  errors
 
 
 
 
+
+to automate the process rather than each time i push the image to docker hub i should go to the server and pull the image or the repo and run the container we will do this automatically by `watchtower` tool. it is a docker container reasponsible for watching the othe rcontainers and if any container its image changed, watchtower pulls the new image and rerun the container automatically, write this comnand on the server terminal   : docker run -d \
+--name watchtower \
+-e WATCHTOWER_POLL_INTERVAL=30 -e WATCHTOWER_TRACE=true \ 
+-v /var/run/docker.sock:/var/run/docker.sock \
+containrrr/watchtower node-app-container 
+
+
+
+
+### Docker orchestration: 
+management layer to manage docker and give us special features                                                     
+
+1- `depoly`: it creates the server and connects to it and run the containers from the compose file instead of us                          
+2- `scaling`: it creates new server with given container under specific conditions(high load - cpu usage) rahter thean we create new server and run the container in it                                                                            
+3- `networking`: the communication is automatically between any container with another one in the same server or anothe server in case of scaling and by default there is a load balancer to distribute the requests                                          
+4- `error handling`: if a container is failed, the docker orchestration automatically resyart the conatiner and if there is a scale it creates another one to ensure the scale is done                                                                                                                            
+5- `updating`: in case we have an update and we want to send this update to the server , rather than we stop the containers and pull the image and run the containers not efficient because any requests in this time the serer will be failed, with  docker orchestration it automatically create another container or if we have multiple inctances it stopes one and keep the others to serve the requests a pull the image and run the new container  (Rolling update)
+
+
+
+
+__
+### Docker swarm: 
+Docker orckestration layer                                                
+
+
+`nodes`: basic unit of Docker swarm which we use to run the containers inside it 
+`manager nodes`: the brain of Docker swarm which make the decisions of the options we talked about above 
+`worker nodes`: contain the containers 
+
+we go to define stack (it like a docker compose file) we define the services we want to make it run in a worker node 
+
+
+on the server terminal: docker swarm init : to initialize swarm with one mnager node 
+
+
+
+
+
+docker service --help to use swarm services 
+
+instead of the commands we can write the functionality of docker swarm inside the docker compose file 
