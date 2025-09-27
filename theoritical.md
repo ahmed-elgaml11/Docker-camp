@@ -81,3 +81,9 @@ It lives outside the container’s filesystem, so data survives when the contain
 
 
 ### after running the database inside acontainer if you wite `npm run dev`  it will not work because the database is installed inside the container not your local machine
+
+
+
+
+
+

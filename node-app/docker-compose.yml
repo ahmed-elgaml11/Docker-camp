@@ -8,24 +8,24 @@ services:
     depends_on: 
       - postgres  
       - redis       
-  # mongo:
-  #   image: mongo
-  #   restart: always
-  #   volumes:
-  #     - mongo-db:/data/db
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: root
-  #     MONGO_INITDB_ROOT_PASSWORD: example
-
-  postgres:
-    image: postgres
+  mongo:
+    image: mongo
     restart: always
-    shm_size: 128mb
     volumes:
-     - postgres-db:/var/lib/postgresql/data
+      - mongo-db:/data/db
     environment:
-      POSTGRES_PASSWORD: example
-      POSTGRES_USER: root
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  # postgres:
+  #   image: postgres
+  #   restart: always
+  #   shm_size: 128mb
+  #   volumes:
+  #    - postgres-db:/var/lib/postgresql/data
+  #   environment:
+  #     POSTGRES_PASSWORD: example
+  #     POSTGRES_USER: root
 
   # mongo-express:
   #   image: mongo-express
